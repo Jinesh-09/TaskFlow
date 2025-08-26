@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser, getUserProfile, UserProfile } from '@/lib/auth'
-import { getAllTasks, updateTaskStatus, updateTaskNote, Task } from '@/lib/tasks'
+import { getAllTasks, updateTaskStatus, updateTaskNote, deleteTask, Task } from '@/lib/tasks'
 import Navbar from '@/components/layout/navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
-import { ArrowLeft, Plus, Calendar, AlertCircle, User, MessageSquare } from 'lucide-react'
+import { ArrowLeft, Plus, Calendar, AlertCircle, User, MessageSquare, Trash } from 'lucide-react'
 import { formatDate, getStatusColor, getPriorityColor } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
@@ -23,6 +23,8 @@ export default function AdminTasksPage() {
   const [noteModalOpen, setNoteModalOpen] = useState(false)
   const [adminNote, setAdminNote] = useState('')
   const [savingNote, setSavingNote] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -97,6 +99,27 @@ export default function AdminTasksPage() {
       toast.success('Task status updated')
     } catch (error) {
       toast.error('An unexpected error occurred')
+    }
+  }
+
+  const handleDeleteTask = async () => {
+    if (!selectedTask) return
+    setDeleting(true)
+    try {
+      const { error } = await deleteTask(selectedTask.id)
+      if (error) {
+        console.error('Delete task error:', error)
+        toast.error('Failed to delete task')
+        return
+      }
+      setTasks(tasks.filter(t => t.id !== selectedTask.id))
+      toast.success('Task deleted')
+      setDeleteModalOpen(false)
+      setSelectedTask(null)
+    } catch (e) {
+      toast.error('An unexpected error occurred while deleting')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -410,6 +433,17 @@ export default function AdminTasksPage() {
                               <MessageSquare className="w-4 h-4 mr-1" />
                               Note
                             </Button>
+                            <Button
+                              size="sm"
+                              className="ml-2 bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg hover:shadow-red-500/25 hover:-translate-y-0.5 transition-all duration-300 transform"
+                              onClick={() => {
+                                setSelectedTask(task)
+                                setDeleteModalOpen(true)
+                              }}
+                            >
+                              <Trash className="w-4 h-4 mr-1" />
+                              Delete
+                            </Button>
                           </td>
                         </tr>
                       )
@@ -453,6 +487,33 @@ export default function AdminTasksPage() {
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-2xl hover:shadow-purple-500/25 hover:-translate-y-0.5 transition-all duration-300 transform"
               >
                 {savingNote ? 'Saving...' : 'Save Note'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Delete Confirmation Modal */}
+        <Modal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          title={`Delete Task - ${selectedTask?.title}`}
+        >
+          <div className="space-y-4">
+            <p className="text-slate-300">Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteModalOpen(false)}
+                className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteTask}
+                disabled={deleting}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
               </Button>
             </div>
           </div>

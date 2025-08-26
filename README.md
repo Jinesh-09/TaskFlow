@@ -13,6 +13,7 @@ A comprehensive task allocation and tracking platform built with Next.js and Sup
 
 ### Employee Portal
 - **Task Dashboard**: View assigned tasks with status indicators and priority levels
+- **AI Task Assistant**: Intelligent chatbot powered by OpenAI to help research and simplify tasks
 - **Document Access**: Download and view attached PDF documents
 - **Status Updates**: Update task progress (Pending → In Progress → Completed)
 - **Personal Notes**: Add clarifications and progress updates
@@ -22,6 +23,7 @@ A comprehensive task allocation and tracking platform built with Next.js and Sup
 
 - **Frontend**: Next.js 14 with TypeScript
 - **Backend**: Supabase (PostgreSQL database, Authentication, File Storage)
+- **AI Integration**: OpenAI GPT-3.5-turbo for intelligent task assistance
 - **Styling**: Tailwind CSS
 - **UI Components**: Custom component library
 - **Icons**: Lucide React
@@ -32,6 +34,7 @@ A comprehensive task allocation and tracking platform built with Next.js and Sup
 ### Prerequisites
 - Node.js 18+ 
 - Supabase account
+- OpenAI API account
 - Git
 
 ### Installation
@@ -57,11 +60,12 @@ A comprehensive task allocation and tracking platform built with Next.js and Sup
    cp .env.local.example .env.local
    ```
    
-   Update `.env.local` with your Supabase credentials:
+   Update `.env.local` with your credentials:
    ```
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+   OPENAI_API_KEY=your_openai_api_key
    ```
 
 5. **Run the development server**
@@ -114,9 +118,20 @@ For testing purposes, you can create demo accounts:
 
 1. **Login** with employee credentials
 2. **View Tasks**: See all assigned tasks on the dashboard
-3. **Update Status**: Change task status as work progresses
-4. **Download Documents**: Access attached PDF files
-5. **Add Notes**: Communicate progress and ask questions
+3. **AI Assistant**: Click the chatbot icon to get help with task research, analysis, and simplification
+4. **Update Status**: Change task status as work progresses
+5. **Download Documents**: Access attached PDF files
+6. **Add Notes**: Communicate progress and ask questions
+
+### AI Task Assistant Features
+
+The AI chatbot can help employees with:
+- **Task Analysis**: Break down complex tasks into manageable steps
+- **Research Assistance**: Get suggestions for approaches and methodologies
+- **Best Practices**: Receive recommendations for industry standards
+- **Clarification**: Ask questions about task requirements and expectations
+- **Time Management**: Get tips for prioritizing and organizing work
+- **Problem Solving**: Discuss challenges and get potential solutions
 
 ## File Structure
 

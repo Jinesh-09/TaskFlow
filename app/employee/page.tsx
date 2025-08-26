@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { ClipboardList, FileText, MessageSquare, Calendar } from 'lucide-react'
 import { formatDate, getStatusColor, getPriorityColor } from '@/lib/utils'
+import Chatbot from '@/components/ui/chatbot'
 import Link from 'next/link'
 
 export default function EmployeeDashboard() {
@@ -248,6 +249,9 @@ export default function EmployeeDashboard() {
             )}
           </CardContent>
         </Card>
+        
+        {/* AI Chatbot */}
+        {user && <Chatbot tasks={tasks} userProfile={user} />}
       </div>
     </div>
   )

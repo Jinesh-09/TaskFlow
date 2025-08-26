@@ -68,12 +68,46 @@ export default function NewTaskPage() {
         assigned_by: user.id,
         priority: formData.priority,
         due_date: formData.due_date || null,
-        status: 'pending'
+        status: 'pending',
+        admin_note: null
       })
 
       if (error) {
         toast.error('Failed to create task')
         return
+      }
+
+      // Send email notification to assigned employee
+      try {
+        const assignedEmployee = employees.find(emp => emp.id === formData.assigned_to)
+        if (assignedEmployee) {
+          const emailResponse = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              employeeName: assignedEmployee.full_name,
+              employeeEmail: assignedEmployee.email,
+              taskTitle: formData.title,
+              taskDescription: formData.description,
+              priority: formData.priority,
+              dueDate: formData.due_date || undefined,
+              assignedBy: user.full_name,
+              adminNote: null
+            }),
+          })
+
+          const emailResult = await emailResponse.json()
+          if (emailResult.success) {
+            console.log('Email notification sent successfully')
+          } else {
+            console.log('Email notification failed:', emailResult.message)
+          }
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError)
+        // Don't fail the task creation if email fails
       }
 
       toast.success('Task created successfully!')
@@ -87,12 +121,12 @@ export default function NewTaskPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <Navbar title="Create New Task" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-            <div className="h-96 bg-gray-200 rounded-lg"></div>
+            <div className="h-8 bg-slate-700 rounded w-1/4 mb-6"></div>
+            <div className="h-96 bg-slate-800/50 border border-slate-700 rounded-lg"></div>
           </div>
         </div>
       </div>
@@ -100,25 +134,25 @@ export default function NewTaskPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <Navbar title="Create New Task" />
       
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <Link href="/admin" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700">
+          <Link href="/admin" className="inline-flex items-center text-sm text-slate-400 hover:text-slate-200 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-1" />
             Back to Dashboard
           </Link>
         </div>
 
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm shadow-2xl">
           <CardHeader>
-            <CardTitle>Create New Task</CardTitle>
+            <CardTitle className="text-slate-100">Create New Task</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="title" className="block text-sm font-medium text-slate-200 mb-2">
                   Task Title *
                 </label>
                 <Input
@@ -127,12 +161,13 @@ export default function NewTaskPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Enter task title"
+                  className="bg-slate-700 border-slate-600 text-slate-100 placeholder-slate-400 focus:border-purple-500 focus:ring-purple-500"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="description" className="block text-sm font-medium text-slate-200 mb-2">
                   Description *
                 </label>
                 <textarea
@@ -141,20 +176,20 @@ export default function NewTaskPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Enter task description"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-slate-600 bg-slate-700 text-slate-100 placeholder-slate-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="assigned_to" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="assigned_to" className="block text-sm font-medium text-slate-200 mb-2">
                   Assign to Employee *
                 </label>
                 <select
                   id="assigned_to"
                   value={formData.assigned_to}
                   onChange={(e) => setFormData({ ...formData, assigned_to: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-slate-600 bg-slate-700 text-slate-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   required
                 >
                   <option value="">Select an employee</option>
@@ -168,14 +203,14 @@ export default function NewTaskPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="priority" className="block text-sm font-medium text-slate-200 mb-2">
                     Priority
                   </label>
                   <select
                     id="priority"
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'low' | 'medium' | 'high' })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-slate-600 bg-slate-700 text-slate-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -184,7 +219,7 @@ export default function NewTaskPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="due_date" className="block text-sm font-medium text-slate-200 mb-2">
                     Due Date (Optional)
                   </label>
                   <Input
@@ -192,17 +227,18 @@ export default function NewTaskPage() {
                     type="date"
                     value={formData.due_date}
                     onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+                    className="bg-slate-700 border-slate-600 text-slate-100 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end space-x-4">
                 <Link href="/admin">
-                  <Button type="button" variant="outline">
+                  <Button type="button" variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white">
                     Cancel
                   </Button>
                 </Link>
-                <Button type="submit" disabled={submitting}>
+                <Button type="submit" disabled={submitting} className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white">
                   {submitting ? 'Creating...' : 'Create Task'}
                 </Button>
               </div>

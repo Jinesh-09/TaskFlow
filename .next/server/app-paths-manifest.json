@@ -1,9 +1,7 @@
 {
+  "/admin/tasks/new/page": "app/admin/tasks/new/page.js",
   "/admin/tasks/page": "app/admin/tasks/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/employee/tasks/[id]/page": "app/employee/tasks/[id]/page.js",
+  "/employee/page": "app/employee/page.js",
   "/login/page": "app/login/page.js",
-  "/register/page": "app/register/page.js",
-  "/admin/employees/page": "app/admin/employees/page.js",
-  "/employee/page": "app/employee/page.js"
+  "/api/send-email/route": "app/api/send-email/route.js"
 }
