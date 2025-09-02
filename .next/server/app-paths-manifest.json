@@ -1,7 +1,9 @@
 {
   "/not-found": "app/not-found.js",
-  "/admin/tasks/page": "app/admin/tasks/page.js",
-  "/admin/tasks/new/page": "app/admin/tasks/new/page.js",
   "/login/page": "app/login/page.js",
-  "/employee/page": "app/employee/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/employee/page": "app/employee/page.js",
+  "/admin/tasks/new/page": "app/admin/tasks/new/page.js",
+  "/admin/tasks/page": "app/admin/tasks/page.js",
+  "/api/send-email/route": "app/api/send-email/route.js"
 }

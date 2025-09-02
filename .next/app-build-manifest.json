@@ -1,20 +1,20 @@
 {
   "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/admin/tasks/new/page": [
+    "/admin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/tasks/new/page.js"
-    ],
-    "/admin/tasks/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/tasks/page.js"
+      "static/chunks/app/admin/page.js"
     ],
     "/login/page": [
       "static/chunks/webpack.js",
@@ -26,10 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/employee/page.js"
     ],
-    "/admin/page": [
+    "/admin/tasks/new/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
+      "static/chunks/app/admin/tasks/new/page.js"
+    ],
+    "/admin/tasks/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/tasks/page.js"
     ],
     "/not-found": [
       "static/chunks/webpack.js",
